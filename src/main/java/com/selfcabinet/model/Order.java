@@ -6,11 +6,6 @@ public class Order {
     @ApiModelProperty(value = "订单id")
     private String order_id;
 
-    @ApiModelProperty(value = "用户id")
-    private String user_id;
-
-    @ApiModelProperty(value = "快递员id")
-    private String courier_id;
 
     @ApiModelProperty(value = "单个柜子id")
     private String cabinet_id;
@@ -36,22 +31,6 @@ public class Order {
 
     public void setOrder_id(String order_id) {
         this.order_id = order_id;
-    }
-
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
-    }
-
-    public String getCourier_id() {
-        return courier_id;
-    }
-
-    public void setCourier_id(String courier_id) {
-        this.courier_id = courier_id;
     }
 
     public String getCabinet_id() {

@@ -24,6 +24,9 @@ public class Cabinet {
     @ApiModelProperty(value = "打开柜子")
     public static final String OPEN="1";
 
+    @ApiModelProperty(value = "关闭柜子")
+    public static final String CLOSED="0";
+
     @ApiModelProperty(value = "单个柜子id")
     private String cabinet_id;
 
@@ -55,7 +58,7 @@ public class Cabinet {
 
     }
 
-    public Cabinet(Cabinet cabinet){
+    public void setCabinet(Cabinet cabinet){
         this.cabinet_id=cabinet.cabinet_id;
         this.cupboard_id=cabinet.cupboard_id;
         this.bar_id=cabinet.bar_id;

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping(path = "/cabinet")
@@ -28,16 +29,32 @@ public class CabinetController {
     }
 
     @ApiModelProperty(value = "凭二维码开柜")
-    @RequestMapping(path = "open")
+    @RequestMapping(path = "open",method = RequestMethod.PATCH)
     public Cabinet OpenCabinetByQRCode(@RequestParam (value = "QRContent")String QRContent)throws Exception{
         return cabinetService.OpenCabinetByQRCode(QRContent);
     }
 
-    @ApiModelProperty(value = "用户取件后重重柜子状态")
-    @RequestMapping(path = "reset",method = RequestMethod.PATCH)
-    public void reset(@RequestParam(value = "order_id")String order_id){
-        cabinetService.afterUsed(order_id);
+//    @ApiModelProperty(value = "用户取件后重重柜子状态")
+//    @RequestMapping(path = "reset",method = RequestMethod.PATCH)
+//    public void reset(@RequestParam(value = "order_id")String order_id)throws Exception{
+//        cabinetService.afterUsed(order_id);
+//    }
+
+    @ApiModelProperty(value = "查看单个自提柜状态")
+    @RequestMapping(path ="showState",method = RequestMethod.GET)
+    public Cabinet showState(@RequestParam(value = "cabinet_id") String cabinet_id)throws Exception{
+        return  cabinetService.showState(cabinet_id);
     }
 
+    @ApiModelProperty(value = "查看整个柜子的状态")
+    @RequestMapping(path = "showStateByCupboard",method = RequestMethod.GET)
+    public List<Cabinet> showStateByCupboard(@RequestParam(value = "cupboard_id") String cupboard_id) throws Exception{
+        return cabinetService.showStateByCupBoard(cupboard_id);
+    }
 
+    @ApiModelProperty(value = "更改自提柜门的状态")
+    @RequestMapping(path = "changeOpen",method = RequestMethod.PATCH)
+    public Cabinet changOpen(@RequestParam(value = "open") String open ,@RequestParam(value = "cabinet_id") String cabinet_id) throws Exception{
+        return cabinetService.changeOpen(open,cabinet_id);
+    }
 }

@@ -18,8 +18,8 @@ public interface OrderMapper {
     Order getById(@Param("order_id") String order_id);
 
 
-    @Insert("INSERT INTO order_info(order_id,user_id,courier_id,bar_id,cabinet_id,cupboard_id,state,cabinet_used)" +
-            "VALUES(#{order_id},#{user_id},#{courier_id},#{bar_id},#{cabinet_id},#{cupboard_id},#{state},#{cabinet_used});")
+    @Insert("INSERT INTO order_info(order_id,bar_id,cabinet_id,cupboard_id,state)" +
+            "VALUES(#{order_id},#{bar_id},#{cabinet_id},#{cupboard_id},#{state});")
     void insert(Order order);
 
     @Update("UPDATE order_info SET state =#{state} WHERE order_id=#{order_id}")

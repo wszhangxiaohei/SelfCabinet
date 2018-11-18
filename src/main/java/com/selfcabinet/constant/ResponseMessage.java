@@ -15,9 +15,12 @@ public class ResponseMessage {
     public static final String NO_GOODS="商品未送达";
     public static final String ERROR_HARD_STATE_OF_CABINET="柜子故障";
     public static final String ERROR_QRCODE_TYPE="二维码类型错误";
+    public static final String OUTDATE_QRCODE="二维码过期";
     public static final String NO_LOGIN="您尚未登录";
     public static final String FAILED_CANCEl_ORDER="货物已经送到，取消订单失败";
     public static final String SUCCESS_CANCEL_ORDER="取消订单成功";
     public static final String ERROR_CABINET_USED="自提柜状态错误";
     public static final String ERROR_ORDER_ID="没有相应订单";
+    public static final String ERROR_CABINET_OPEN="输入自提柜门的开关错误";
+
 }

@@ -21,15 +21,15 @@ public class OrderController {
         this.orderService=orderService;
     }
 
-    @ApiModelProperty(value = "新订单来分配自提柜")
-    @RequestMapping(path = "distribution",method = RequestMethod.POST)
-    public Cabinet distribution(@RequestBody Order order)throws Exception{
-        return orderService.distribution(order);
-    }
+//    @ApiModelProperty(value = "新订单来分配自提柜")
+//    @RequestMapping(path = "distribution",method = RequestMethod.POST)
+//    public Cabinet distribution(@RequestBody Order order)throws Exception{
+//        return orderService.distribution(order);
+//    }
 
-    @ApiModelProperty(value = "取消订单")
-    @RequestMapping(path = "cancelOrder",method = RequestMethod.PATCH)
-    public String cancel(@RequestParam(value = "order_id")String order_id)throws Exception{
-        return orderService.cancelOrder(order_id);
-    }
+//    @ApiModelProperty(value = "取消订单")
+//    @RequestMapping(path = "cancelOrder",method = RequestMethod.PATCH)
+//    public String cancel(@RequestParam(value = "order_id")String order_id)throws Exception{
+//        return orderService.cancelOrder(order_id);
+//    }
 }

@@ -26,7 +26,7 @@ public class AdminService {
     //登录
     public String login(Admin admin)throws Exception{
         if (admin.getAdmin_id()==null){
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR,ResponseMessage.MISSED_ADMIN_ID);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.MISSED_ADMIN_ID,ResponseMessage.MISSED_ADMIN_ID);
         }
         Admin adminFromDb=adminMapper.getById(admin.getAdmin_id());
         if (adminFromDb.getPassword().equals(admin.getPassword())){
@@ -35,11 +35,11 @@ public class AdminService {
                 return ResponseMessage.SUCCESS_REGISTER;
             }
             else {
-                return ResponseMessage.ERROR_BAR;
+                throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR_BAR,ResponseMessage.ERROR_BAR);
             }
         }
         else {
-            return ResponseMessage.ERROR_PASSWORD;
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR_PASSWORD,ResponseMessage.ERROR_PASSWORD);
         }
 
     }
@@ -47,14 +47,14 @@ public class AdminService {
     //更新密码
     public String updatePassword(Admin admin,String newPassword){
         if (admin.getAdmin_id()==null){
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR,ResponseMessage.MISSED_ADMIN_ID);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.MISSED_ADMIN_ID,ResponseMessage.MISSED_ADMIN_ID);
         }
         if (newPassword==null){
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(),ResponseMessage.ERROR,ResponseMessage.MISSED_NEW_PASSWORD);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(),ResponseMessage.MISSED_NEW_PASSWORD,ResponseMessage.MISSED_NEW_PASSWORD);
         }
         Admin adminFromDb=adminMapper.getById(admin.getAdmin_id());
         if (adminFromDb.getState().equals(Admin.LOGOUT)){
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR,ResponseMessage.NO_LOGIN);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.NO_LOGIN,ResponseMessage.NO_LOGIN);
         }
         if (adminFromDb.getPassword().equals(admin.getPassword())){
             adminMapper.updatePasswordById(newPassword,admin.getAdmin_id());
@@ -62,7 +62,8 @@ public class AdminService {
             return  ResponseMessage.SUCCESS_UPDATE_PASSWORD;
         }
         else {
-            return  ResponseMessage.ERROR_OLD_PASSWORD;
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR_OLD_PASSWORD,ResponseMessage.ERROR_OLD_PASSWORD);
+            //return  ResponseMessage.ERROR_OLD_PASSWORD;
         }
     }
 
@@ -76,7 +77,7 @@ public class AdminService {
            return cabinetList;
         }
         else {
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR,ResponseMessage.NO_LOGIN);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.NO_LOGIN,ResponseMessage.NO_LOGIN);
         }
     }
 
@@ -87,7 +88,7 @@ public class AdminService {
             return cabinet;
         }
         else {
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR,ResponseMessage.NO_LOGIN);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.NO_LOGIN,ResponseMessage.NO_LOGIN);
         }
     }
 }

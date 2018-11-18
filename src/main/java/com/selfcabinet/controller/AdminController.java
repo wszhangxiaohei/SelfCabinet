@@ -1,5 +1,6 @@
 package com.selfcabinet.controller;
 
+import com.selfcabinet.constant.ResponseMessage;
 import com.selfcabinet.model.Admin;
 import com.selfcabinet.model.Cabinet;
 import com.selfcabinet.service.AdminService;
@@ -22,7 +23,7 @@ public class AdminController {
     public AdminController(AdminService adminService){this.adminService=adminService;}
 
     @ApiModelProperty(value = "管理员登录")
-    @RequestMapping(path="login",method = RequestMethod.GET)
+    @RequestMapping(path="login",method = RequestMethod.POST)
     public String login(@RequestBody Admin admin)throws Exception{
         return adminService.login(admin);
     }
@@ -35,8 +36,9 @@ public class AdminController {
 
     @ApiModelProperty(value = "管理员退出登录")
     @RequestMapping(path="logout",method = RequestMethod.PATCH)
-    public void logout(@RequestParam(value = "admin_id") String admin_id)throws Exception{
+    public String logout(@RequestParam(value = "admin_id") String admin_id)throws Exception{
         adminService.logout(admin_id);
+        return ResponseMessage.SUCCESS;
     }
 
     @ApiModelProperty(value = "管理员查看柜子状态")
