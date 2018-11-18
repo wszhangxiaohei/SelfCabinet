@@ -9,11 +9,8 @@ public class Cabinet {
     @ApiModelProperty(value = "自提柜空闲")
     public static final String SPARE="0";
 
-    @ApiModelProperty(value = "自提柜被预定，商品未到")
-    public static final String ORDER="1";
-
     @ApiModelProperty(value = "自提柜正在使用中，商品已到")
-    public static final String USED="2";
+    public static final String USED="1";
 
     @ApiModelProperty(value = "柜子正常")
     public static final String NORMAL="0";

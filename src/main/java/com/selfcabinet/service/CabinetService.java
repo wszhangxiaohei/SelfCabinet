@@ -63,13 +63,8 @@ public class CabinetService {
                    if (listCabinet.get(i).getUsed().equals(Cabinet.SPARE) && listCabinet.get(i).getState().equals(Cabinet.NORMAL)) {
                        //找到cabinet
                        cabinet.setCabinet(listCabinet.get(i));
-                       cabinet.setUsed(Cabinet.USED);
                        cabinet.setOpen(Cabinet.OPEN);
-                       cabinetMapper.updateUsedById(Cabinet.USED,cabinet.getCabinet_id());
                        cabinetMapper.updateOpenById(Cabinet.OPEN,cabinet.getCabinet_id());
-
-                       //更新cupboard库
-                       cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(cupboard_id)-1,cupboard_id);
 
                        //更新order库
                        order.setOrder_id(order_id);
@@ -78,7 +73,8 @@ public class CabinetService {
                        order.setCabinet_id(cabinet.getCabinet_id());
                        order.setState(Order.UNDONE);
                        orderMapper.insert(order);
-                       return cabinet;
+
+                      return cabinet;
                    }
                }
 
@@ -104,14 +100,6 @@ public class CabinetService {
                else if (cabinet.getUsed().equals(Cabinet.USED)){
                    cabinetMapper.updateOpenById(Cabinet.OPEN,cabinet.getCabinet_id());
                    cabinet.setOpen(Cabinet.OPEN);
-
-                   //1、更新订单表
-                   orderMapper.updateStateById(Order.DONE,order_id);
-                   //2、更新cupboard表
-                   cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(order.getCupboard_id())+1,order.getCupboard_id());
-                   //3、更新cabinet表
-                   cabinetMapper.updateUsedById(Cabinet.SPARE,order.getCabinet_id());
-
                    return cabinet;
                }
            }
@@ -125,17 +113,36 @@ public class CabinetService {
         throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.ERROR_QRCODE_TYPE, ResponseMessage.ERROR_QRCODE_TYPE);
     }
 
-    public void afterUsed(String QRContent) throws Exception {
+    public void closeCabinetByQRCode(String QRContent) throws Exception {
         DecodedJWT jwt = CommonUtil.phraseJWT(QRContent);
         String[] content=jwt.getSubject().split("_");
         String order_id=content[0];
+        String cupboard_id=content[1];
+        String type=content[2];
         Order order = orderMapper.getById(order_id);
-        //1、更新订单表
-        orderMapper.updateStateById(Order.DONE,order_id);
-        //2、更新cupboard表
-        cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(order.getCupboard_id())+1,order.getCupboard_id());
-        //3、更新cabinet表
-        cabinetMapper.updateUsedById(Cabinet.SPARE,order.getCabinet_id());
+
+        if (type.equals("courier")){
+
+            //1.更新cupboard库
+            cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(cupboard_id)-1,cupboard_id);
+            //2.更新cabinet表
+            cabinetMapper.updateUsedById(Cabinet.USED,order.getCabinet_id());
+
+
+        }
+        else if (type.equals("user")){
+            //order = orderMapper.getById(order_id);
+            //1、更新订单表
+            orderMapper.updateStateById(Order.DONE,order_id);
+            //2、更新cupboard表
+            cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(order.getCupboard_id())+1,order.getCupboard_id());
+            //3、更新cabinet表
+            cabinetMapper.updateUsedById(Cabinet.SPARE,order.getCabinet_id());
+
+        }
+        else {
+            throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.ERROR_QRCODE_TYPE, ResponseMessage.ERROR_QRCODE_TYPE);
+        }
     }
 
     public Cabinet showState(String cabinet_id){

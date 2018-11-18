@@ -15,6 +15,15 @@ public class Admin {
     @ApiModelProperty(value = "当前管理员登录状态")
     private String state;
 
+    @ApiModelProperty(value = "管理员电话")
+    private String tel;
+
+    @ApiModelProperty(value = "管理员姓名")
+    private String name;
+
+    @ApiModelProperty(value = "管理员管辖范围")
+    private String info;
+
     public static final String LOGIN="1";
     public static final String LOGOUT="0";
 
@@ -48,5 +57,29 @@ public class Admin {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 }

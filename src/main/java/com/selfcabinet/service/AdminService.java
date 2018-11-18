@@ -91,5 +91,9 @@ public class AdminService {
             throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.NO_LOGIN,ResponseMessage.NO_LOGIN);
         }
     }
+
+    public List<Admin> queryAdmin(){
+        return adminMapper.getAll();
+    }
 }
 

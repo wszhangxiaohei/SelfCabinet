@@ -81,7 +81,7 @@ public class QRCodeService {
             String resultString=result.toString();
 
             DecodedJWT jwt = CommonUtil.phraseJWT(resultString);
-            return jwt.getSubject();
+            return jwt.getSubject()+'+'+jwt.getToken();
 
 
 //            DecodedJWT jwt;

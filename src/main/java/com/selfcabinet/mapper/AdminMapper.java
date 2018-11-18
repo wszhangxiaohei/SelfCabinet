@@ -20,11 +20,14 @@ public interface AdminMapper {
     @Select("SELECT state FROM admin_info WHERE admin_id = #{admin_id}")
     String  getStateById(@Param("admin_id") String admin_id);
 
+    @Select("SELECT tel FROM admin_info WHERE bar_id = #{var_id}")
+    String  getTelByBarId(@Param("bar_id") String bar_id);
+
     @Select("SELECT * FROM admin_info WHERE bar_id = #{bar_id}")
     List<Admin> getByBarId(@Param("bar_id") String bar_id);
 
-    @Insert("INSERT INTO admin_info(admin_id,password,bar_id,state)" +
-            "VALUES(#{admin_id},#{password},#{bar_id},#{state});")
+    @Insert("INSERT INTO admin_info(admin_id,password,bar_id,state,tel,name,info)" +
+            "VALUES(#{admin_id},#{password},#{bar_id},#{state},#{tel},#{name},#{info});")
     void insert(Admin admin);
 
     @Update("UPDATE admin_info SET password =#{password} WHERE admin_id=#{admin_id}")

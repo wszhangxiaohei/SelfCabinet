@@ -52,4 +52,10 @@ public class AdminController {
     public Cabinet openCabinet(@RequestParam(value = "admin_id") String admin_id,@RequestParam(value = "cabinet_id") String cabinet_id)throws Exception{
         return adminService.openCabinet(admin_id,cabinet_id);
     }
+
+    @ApiModelProperty(value = "查看所有管理员信息")
+    @RequestMapping(path="query",method = RequestMethod.GET)
+    public List<Admin> queryAdmin()throws Exception{
+        return adminService.queryAdmin();
+    }
 }

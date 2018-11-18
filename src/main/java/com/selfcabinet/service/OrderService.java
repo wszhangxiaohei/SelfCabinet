@@ -68,24 +68,24 @@ public class OrderService {
 //        }
 //    }
 
-    public String cancelOrder(String order_id)throws Exception{
-        Order order=orderMapper.getById(order_id);
-        Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
-        if (cabinet.getUsed().equals(Cabinet.USED)){
-            throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.FAILED_CANCEl_ORDER, ResponseMessage.FAILED_CANCEl_ORDER);
-
-        }
-        else if (cabinet.getUsed().equals(Cabinet.ORDER)){
-            cabinetMapper.updateUsedById(Cabinet.SPARE,cabinet.getCabinet_id());
-            cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(order.getCupboard_id())+1,order.getCupboard_id());
-            orderMapper.updateStateById(Order.DONE,order_id);
-            return ResponseMessage.SUCCESS_CANCEL_ORDER;
-        }
-        else{
-            throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.ERROR_CABINET_USED, ResponseMessage.ERROR_CABINET_USED);
-        }
-
-    }
+//    public String cancelOrder(String order_id)throws Exception{
+//        Order order=orderMapper.getById(order_id);
+//        Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
+//        if (cabinet.getUsed().equals(Cabinet.USED)){
+//            throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.FAILED_CANCEl_ORDER, ResponseMessage.FAILED_CANCEl_ORDER);
+//
+//        }
+//        else if (cabinet.getUsed().equals(Cabinet.ORDER)){
+//            cabinetMapper.updateUsedById(Cabinet.SPARE,cabinet.getCabinet_id());
+//            cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(order.getCupboard_id())+1,order.getCupboard_id());
+//            orderMapper.updateStateById(Order.DONE,order_id);
+//            return ResponseMessage.SUCCESS_CANCEL_ORDER;
+//        }
+//        else{
+//            throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.ERROR_CABINET_USED, ResponseMessage.ERROR_CABINET_USED);
+//        }
+//
+//    }
 
 
 
