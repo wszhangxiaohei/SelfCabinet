@@ -81,9 +81,9 @@ public class AdminService {
         }
     }
 
-    public Cabinet openCabinet (String admin_id,String cabinet_id){
+    public Cabinet openCabinet (String admin_id,String cupboard_id,String no){
         if (adminMapper.getStateById(admin_id).equals(Admin.LOGIN)){
-            Cabinet cabinet=cabinetMapper.getById(cabinet_id);
+            Cabinet cabinet=cabinetMapper.getByCupAndNo(cupboard_id,no);
             cabinet.setOpen(Cabinet.OPEN);
             return cabinet;
         }

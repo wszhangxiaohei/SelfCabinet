@@ -49,8 +49,8 @@ public class AdminController {
 
     @ApiModelProperty(value = "管理员打开自提柜")
     @RequestMapping(path="openCabinet",method = RequestMethod.GET)
-    public Cabinet openCabinet(@RequestParam(value = "admin_id") String admin_id,@RequestParam(value = "cabinet_id") String cabinet_id)throws Exception{
-        return adminService.openCabinet(admin_id,cabinet_id);
+    public Cabinet openCabinet(@RequestParam(value = "admin_id") String admin_id,@RequestParam(value = "cupboard_id") String cupboard_id,@RequestParam(value = "no") String no)throws Exception{
+        return adminService.openCabinet(admin_id,cupboard_id,no);
     }
 
     @ApiModelProperty(value = "查看所有管理员信息")

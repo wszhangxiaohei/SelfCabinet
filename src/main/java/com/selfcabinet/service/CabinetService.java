@@ -7,6 +7,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.selfcabinet.constant.ResponseMessage;
 import com.selfcabinet.mapper.CabinetMapper;
 import com.selfcabinet.mapper.CupboardMapper;
+import com.selfcabinet.mapper.EquipMapper;
 import com.selfcabinet.mapper.OrderMapper;
 import com.selfcabinet.model.Cabinet;
 import com.selfcabinet.model.Order;
@@ -32,13 +33,15 @@ public class CabinetService {
     private final OrderMapper orderMapper;
     private final CupboardMapper cupboardMapper;
     private final QRCodeService qrCodeService;
+    private final EquipMapper equipMapper;
 
     @Autowired
-    public CabinetService(CabinetMapper cabinetMapper,OrderMapper orderMapper,CupboardMapper cupboardMapper,QRCodeService qrCodeService){
+    public CabinetService(CabinetMapper cabinetMapper,OrderMapper orderMapper,CupboardMapper cupboardMapper,QRCodeService qrCodeService,EquipMapper equipMapper){
         this.cabinetMapper=cabinetMapper;
         this.orderMapper=orderMapper;
         this.cupboardMapper=cupboardMapper;
         this.qrCodeService=qrCodeService;
+        this.equipMapper=equipMapper;
     }
 
     public Cabinet OpenCabinetByQRCode(String QRContent) throws Exception {
@@ -128,6 +131,9 @@ public class CabinetService {
             //2.更新cabinet表
             cabinetMapper.updateUsedById(Cabinet.USED,order.getCabinet_id());
 
+            //模拟硬件柜子送货
+            Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
+            equipMapper.put(cabinet.getNo());
 
         }
         else if (type.equals("user")){
@@ -139,6 +145,9 @@ public class CabinetService {
             //3、更新cabinet表
             cabinetMapper.updateUsedById(Cabinet.SPARE,order.getCabinet_id());
 
+            //模拟硬件取货
+            Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
+            equipMapper.get(cabinet.getNo());
         }
         else {
             throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.ERROR_QRCODE_TYPE, ResponseMessage.ERROR_QRCODE_TYPE);

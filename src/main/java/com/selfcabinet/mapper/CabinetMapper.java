@@ -18,6 +18,9 @@ public interface CabinetMapper {
     @Select("SELECT * FROM cabinet_info WHERE cabinet_id = #{cabinet_id}")
     Cabinet getById(@Param("cabinet_id") String cabinet_id);
 
+    @Select("SELECT * FROM cabinet_info WHERE cupboard_id = #{cupboard_id} and no =#{no}" )
+    Cabinet getByCupAndNo(@Param("cupboard_id") String cupboard_id,@Param("no") String no);
+
     @Select("SELECT * FROM cabinet_info WHERE bar_id = #{bar_id}")
     List<Cabinet> getByBarId(@Param("bar_id") String bar_id);
 
