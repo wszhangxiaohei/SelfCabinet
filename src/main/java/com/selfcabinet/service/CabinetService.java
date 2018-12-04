@@ -54,6 +54,7 @@ public class CabinetService {
         String order_id=content[0];
         String cupboard_id=content[1];
         String type=content[2];
+        String carrier_code=content[3];
         Order order= new Order();
         Cabinet cabinet=new Cabinet();
 
@@ -74,6 +75,7 @@ public class CabinetService {
                        order.setCupboard_id(cupboard_id);
                        order.setBar_id(cabinet.getBar_id());
                        order.setCabinet_id(cabinet.getCabinet_id());
+                       order.setCarrier_code(carrier_code);
                        order.setState(Order.UNDONE);
                        orderMapper.insert(order);
 
@@ -114,6 +116,47 @@ public class CabinetService {
 
         //二维码类型出错
         throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.ERROR_QRCODE_TYPE, ResponseMessage.ERROR_QRCODE_TYPE);
+    }
+
+    public Cabinet openCabinetByCarrierCode(String carrier_code) throws Exception{
+
+        Order order= new Order();
+        Cabinet cabinet=new Cabinet();
+        order=orderMapper.getByCarrierCode(carrier_code);
+        if (order==null){
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR_ORDER_ID, ResponseMessage.ERROR_ORDER_ID);
+        }
+        cabinet.setCabinet(cabinetMapper.getById(order.getCabinet_id()));
+
+        if (cabinet.getState().equals(Cabinet.NORMAL)){
+            if (cabinet.getUsed().equals(Cabinet.SPARE)){
+                //提示商品未送到
+                throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.NO_GOODS, ResponseMessage.NO_GOODS);
+            }
+            else if (cabinet.getUsed().equals(Cabinet.USED)){
+                cabinetMapper.updateOpenById(Cabinet.OPEN,cabinet.getCabinet_id());
+                cabinet.setOpen(Cabinet.OPEN);
+                return cabinet;
+            }
+        }
+
+        //柜子硬件故障
+        throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR_HARD_STATE_OF_CABINET, ResponseMessage.ERROR_HARD_STATE_OF_CABINET);
+
+    }
+
+    public void closeCabinetByCarrierCode(String carrier_code){
+        Order order=orderMapper.getByCarrierCode(carrier_code);
+        //1、更新订单表
+        orderMapper.updateStateById(Order.DONE,order.getOrder_id());
+        //2、更新cupboard表
+        cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(order.getCupboard_id())+1,order.getCupboard_id());
+        //3、更新cabinet表
+        cabinetMapper.updateUsedById(Cabinet.SPARE,order.getCabinet_id());
+
+        //模拟硬件取货
+        Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
+        equipMapper.get(cabinet.getNo());
     }
 
     public void closeCabinetByQRCode(String QRContent) throws Exception {

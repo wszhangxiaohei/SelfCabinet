@@ -24,8 +24,8 @@ public class QRCodeController {
 
     @ApiModelProperty(value = "产生二维码")
     @RequestMapping(path = "create",method = RequestMethod.POST)
-    public void create(@RequestParam(value = "order_id") String order_id,@RequestParam(value = "cupboard_id") String cupboard_id,@RequestParam(value = "type") String type) throws Exception {
-        qrCodeService.createQRCode(order_id,cupboard_id,type);
+    public void create(@RequestParam(value = "order_id") String order_id,@RequestParam(value = "cupboard_id") String cupboard_id,@RequestParam(value = "type") String type,@RequestParam(value = "carrier_code") String carrier_code) throws Exception {
+        qrCodeService.createQRCode(order_id,cupboard_id,type,carrier_code);
     }
 
     @ApiModelProperty(value = "读取二维码")

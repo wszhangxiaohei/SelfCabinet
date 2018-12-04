@@ -22,5 +22,7 @@ public class ResponseMessage {
     public static final String ERROR_CABINET_USED="自提柜状态错误";
     public static final String ERROR_ORDER_ID="没有相应订单";
     public static final String ERROR_CABINET_OPEN="输入自提柜门的开关错误";
+    public static final String MULT_ORDER_ID="订单号重复";
+    public static final String MULT_CARRIER_CODE="取货码重复";
 
 }

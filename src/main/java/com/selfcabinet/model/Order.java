@@ -19,6 +19,9 @@ public class Order {
     @ApiModelProperty(value = "订单当前状态")
     private String state;
 
+    @ApiModelProperty(value = "取货码")
+    private String carrier_code;
+
     @ApiModelProperty(value = "订单未完成")
     public static final String UNDONE="0";
 
@@ -63,5 +66,13 @@ public class Order {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getCarrier_code() {
+        return carrier_code;
+    }
+
+    public void setCarrier_code(String carrier_code) {
+        this.carrier_code = carrier_code;
     }
 }

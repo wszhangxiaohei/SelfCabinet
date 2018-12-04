@@ -40,6 +40,18 @@ public class CabinetController {
         cabinetService.closeCabinetByQRCode(QRContent);
     }
 
+    @ApiModelProperty(value = "凭取货码开柜")
+    @RequestMapping(path = "openByCarrierCode",method = RequestMethod.PATCH)
+    public Cabinet OpenCabinetByCarrierCode(@RequestParam (value = "carrier_code")String carrier_code)throws Exception{
+        return cabinetService.openCabinetByCarrierCode(carrier_code);
+    }
+
+    @ApiModelProperty(value = "凭取货码关闭柜子")
+    @RequestMapping(path = "closeByCarrierCode",method = RequestMethod.PATCH)
+    public void closeCabinetByCarrierCode(@RequestParam(value = "carrier_code")String carrier_code)throws Exception{
+        cabinetService.closeCabinetByCarrierCode(carrier_code);
+    }
+
 //    @ApiModelProperty(value = "查看单个自提柜状态")
 //    @RequestMapping(path ="showState",method = RequestMethod.GET)
 //    public Cabinet showState(@RequestParam(value = "cabinet_id") String cabinet_id)throws Exception{

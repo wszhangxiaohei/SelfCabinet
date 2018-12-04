@@ -13,6 +13,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.selfcabinet.constant.ResponseMessage;
 import com.selfcabinet.mapper.OrderMapper;
+import com.selfcabinet.model.Order;
 import com.selfcabinet.model.SelfCabinetException;
 import com.selfcabinet.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +39,22 @@ public class QRCodeService {
         this.orderMapper=orderMapper;
     }
 
-    public void createQRCode(String order_id,String cupboard_id, String type) throws Exception {
+    public void createQRCode(String order_id,String cupboard_id, String type,String carrier_code) throws Exception {
         if(!(type.equals("user")||type.equals("courier"))){
             throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR_QRCODE_TYPE, ResponseMessage.ERROR_QRCODE_TYPE);
+        }
+
+        if (orderMapper.getIdNumByCarrierCode(carrier_code)!=0){
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.MULT_CARRIER_CODE, ResponseMessage.MULT_CARRIER_CODE);
+        }
+        if (orderMapper.getIdNumById(order_id)!=0){
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.MULT_ORDER_ID, ResponseMessage.MULT_ORDER_ID);
         }
 
         int width=300;
         int height=300;
         String format="png";
-        String contentInfo= order_id+"_"+cupboard_id+"_"+type;
+        String contentInfo= order_id+"_"+cupboard_id+"_"+type+"_"+carrier_code;
         Date createTime = new Date();
         Date expireTime = new Date(createTime.getTime() + QRExpireTime);
         String content= CommonUtil.createJWT(contentInfo,createTime, expireTime);
