@@ -41,14 +41,14 @@ public class QRCodeService {
 
     public void createQRCode(String order_id,String cupboard_id, String type,String carrier_code) throws Exception {
         if(!(type.equals("user")||type.equals("courier"))){
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR_QRCODE_TYPE, ResponseMessage.ERROR_QRCODE_TYPE);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR, ResponseMessage.ERROR_QRCODE_TYPE);
         }
 
         if (orderMapper.getIdNumByCarrierCode(carrier_code)!=0){
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.MULT_CARRIER_CODE, ResponseMessage.MULT_CARRIER_CODE);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR, ResponseMessage.MULT_CARRIER_CODE);
         }
         if (orderMapper.getIdNumById(order_id)!=0){
-            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.MULT_ORDER_ID, ResponseMessage.MULT_ORDER_ID);
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR, ResponseMessage.MULT_ORDER_ID);
         }
 
         int width=300;

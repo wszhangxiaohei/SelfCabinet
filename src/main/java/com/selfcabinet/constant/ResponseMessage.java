@@ -4,6 +4,7 @@ public class ResponseMessage {
     public static final String ERROR = "error!";
     public static final String SUCCESS = "success!";
     public static final String MISSED_ADMIN_ID="缺失管理员账号";
+    public static final String ERROR_ADMIN_ID="管理员账号错误";
     public static final String MISSED_NEW_PASSWORD="新密码不能为空";
     public static final String ERROR_PASSWORD="密码错误，登录失败";
     public static final String ERROR_BAR="管理员权限错误";
@@ -24,5 +25,8 @@ public class ResponseMessage {
     public static final String ERROR_CABINET_OPEN="输入自提柜门的开关错误";
     public static final String MULT_ORDER_ID="订单号重复";
     public static final String MULT_CARRIER_CODE="取货码重复";
+    public static final String MULT_SCAN_CODE_FOR_CURRIER="货物已经送达，请勿重复扫码";
+    public static final String MULT_SCAN_CODE_FOR_USER="货物已经领取完毕";
+    public static final String MULT_ORDER="多重订单";
 
 }
