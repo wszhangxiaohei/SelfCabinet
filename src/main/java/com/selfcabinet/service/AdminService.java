@@ -6,6 +6,8 @@ import com.selfcabinet.mapper.CabinetMapper;
 import com.selfcabinet.model.Cabinet;
 import com.selfcabinet.model.SelfCabinetException;
 import com.selfcabinet.model.Admin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,12 @@ public class AdminService {
         this.cabinetMapper=cabinetMapper;
     }
 
+    private static final Logger log = LoggerFactory.getLogger(AdminService.class);
+
+
     //登录
     public String login(Admin admin)throws Exception{
+        log.info("[admin][login]");
         if (admin.getAdmin_id()==null){
             throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR,ResponseMessage.MISSED_ADMIN_ID);
         }
@@ -35,6 +41,7 @@ public class AdminService {
         if (adminFromDb.getPassword().equals(admin.getPassword())){
             if (adminFromDb.getBar_id().equals(admin.getBar_id())){
                 adminMapper.updateStateById(Admin.LOGIN,admin.getAdmin_id());
+                log.info("[admin][login]登录成功"+admin.getAdmin_id());
                 return ResponseMessage.SUCCESS_REGISTER;
             }
             else {
@@ -82,6 +89,7 @@ public class AdminService {
     }
 
     public List<Cabinet>showStatus(String admin_id,String cupboard_id){
+        log.info("[admin][showStatus]");
 
         Admin adminFromDb=adminMapper.getById(admin_id);
         if (adminFromDb==null){

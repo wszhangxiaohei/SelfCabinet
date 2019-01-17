@@ -11,6 +11,8 @@ import com.selfcabinet.model.Order;
 import com.selfcabinet.model.SelfCabinetException;
 import com.selfcabinet.model.StimulateOrder;
 import com.selfcabinet.utils.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheAnnotationParser;
 import org.springframework.http.HttpStatus;
@@ -31,8 +33,10 @@ public class CabinetService {
     private final OrderMapper orderMapper;
     private final CupboardMapper cupboardMapper;
     private final QRCodeService qrCodeService;
-    private final EquipMapper equipMapper;
+    //private final EquipMapper equipMapper;
     private final StimulateOrderMapper stimulateOrderMapper;
+
+    private static final Logger log = LoggerFactory.getLogger(CabinetService.class);
 
     @Autowired
     public CabinetService(CabinetMapper cabinetMapper, OrderMapper orderMapper, CupboardMapper cupboardMapper, QRCodeService qrCodeService, EquipMapper equipMapper, StimulateOrderMapper stimulateOrderMapper){
@@ -40,7 +44,7 @@ public class CabinetService {
         this.orderMapper=orderMapper;
         this.cupboardMapper=cupboardMapper;
         this.qrCodeService=qrCodeService;
-        this.equipMapper=equipMapper;
+        //this.equipMapper=equipMapper;
         this.stimulateOrderMapper=stimulateOrderMapper;
     }
 
@@ -83,8 +87,10 @@ public class CabinetService {
                        order.setState(Order.UNDONE);
                        orderMapper.insert(order);
 
+                       log.info("[cabinet][open]管理员送货打开柜门"+order_id);
+
                        //更新模拟订单库
-                       stimulateOrderMapper.updateStatusById("1",order_id);
+                       //stimulateOrderMapper.updateStatusById("1",order_id);
 
                       return cabinet;
                    }
@@ -97,7 +103,9 @@ public class CabinetService {
            }
        }
        else if (type.equals("user")){
-
+           if (orderMapper.getIdNumById(order_id)==0){
+               throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(),ResponseMessage.ERROR,ResponseMessage.NO_GOODS);
+           }
            if (orderMapper.getIdNumById(order_id)!=1){
                throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(),ResponseMessage.ERROR,ResponseMessage.MULT_ORDER);
            }
@@ -117,6 +125,7 @@ public class CabinetService {
                    throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR, ResponseMessage.NO_GOODS);
                }
                else if (cabinet.getUsed().equals(Cabinet.USED)){
+                   log.info("[cabinet][open]用户打开柜子"+order_id);
                    cabinetMapper.updateOpenById(Cabinet.OPEN,cabinet.getCabinet_id());
                    cabinet.setOpen(Cabinet.OPEN);
                    return cabinet;
@@ -133,6 +142,13 @@ public class CabinetService {
     }
 
     public Cabinet openCabinetByCarrierCode(String carrier_code) throws Exception{
+
+
+        int  num = orderMapper.getIdNumByCarrierCode(carrier_code);
+        log.info("[cabinet][openCabinetByCarrierCode]取货吗数量"+num);
+        if (orderMapper.getIdNumByCarrierCode(carrier_code)==0){
+            throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(),ResponseMessage.ERROR,ResponseMessage.NO_GOODS);
+        }
 
         if (orderMapper.getIdNumByCarrierCode(carrier_code)!=1){
             throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(),ResponseMessage.ERROR,ResponseMessage.MULT_ORDER);
@@ -157,6 +173,7 @@ public class CabinetService {
             else if (cabinet.getUsed().equals(Cabinet.USED)){
                 cabinetMapper.updateOpenById(Cabinet.OPEN,cabinet.getCabinet_id());
                 cabinet.setOpen(Cabinet.OPEN);
+                log.info("[cabinet][openCabinetByCarrierCode]用户打开柜子"+carrier_code);
                 return cabinet;
             }
         }
@@ -167,6 +184,15 @@ public class CabinetService {
     }
 
     public void closeCabinetByCarrierCode(String carrier_code){
+
+        //int  num = orderMapper.getIdNumByCarrierCode(carrier_code);
+        //log.info("取货吗数量"+num);
+        //System.out.println(num);
+
+
+        if (orderMapper.getIdNumByCarrierCode(carrier_code)==0){
+            throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(),ResponseMessage.ERROR,ResponseMessage.NO_GOODS);
+        }
 
         if (orderMapper.getIdNumByCarrierCode(carrier_code)!=1){
             throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(),ResponseMessage.ERROR,ResponseMessage.MULT_ORDER);
@@ -184,9 +210,10 @@ public class CabinetService {
         //3、更新cabinet表
         cabinetMapper.updateUsedById(Cabinet.SPARE,order.getCabinet_id());
 
+        log.info("[cabinet][closeCabinetByCarrierCode]用户关闭柜子"+carrier_code);
         //模拟硬件取货
-        Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
-        equipMapper.get(cabinet.getNo());
+        //Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
+        //equipMapper.get(cabinet.getNo());
     }
 
     public void closeCabinetByQRCode(String QRContent) throws Exception {
@@ -211,9 +238,10 @@ public class CabinetService {
             //2.更新cabinet表
             cabinetMapper.updateUsedById(Cabinet.USED,order.getCabinet_id());
 
+            log.info("[cabinet][closeCabinetByQRCode]管理员关闭柜子"+order_id);
             //模拟硬件柜子送货
-            Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
-            equipMapper.put(cabinet.getNo());
+            //Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
+            //equipMapper.put(cabinet.getNo());
 
         }
         else if (type.equals("user")){
@@ -225,9 +253,10 @@ public class CabinetService {
             //3、更新cabinet表
             cabinetMapper.updateUsedById(Cabinet.SPARE,order.getCabinet_id());
 
+            log.info("[cabinet][closeCabinetByQRCode]用户关闭柜子"+order_id);
             //模拟硬件取货
-            Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
-            equipMapper.get(cabinet.getNo());
+            //Cabinet cabinet=cabinetMapper.getById(order.getCabinet_id());
+            //equipMapper.get(cabinet.getNo());
         }
         else {
             throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ResponseMessage.ERROR, ResponseMessage.ERROR_QRCODE_TYPE);
