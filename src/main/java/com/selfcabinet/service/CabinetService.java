@@ -33,18 +33,16 @@ public class CabinetService {
     private final OrderMapper orderMapper;
     private final CupboardMapper cupboardMapper;
     private final QRCodeService qrCodeService;
-    //private final EquipMapper equipMapper;
     private final StimulateOrderMapper stimulateOrderMapper;
 
     private static final Logger log = LoggerFactory.getLogger(CabinetService.class);
 
     @Autowired
-    public CabinetService(CabinetMapper cabinetMapper, OrderMapper orderMapper, CupboardMapper cupboardMapper, QRCodeService qrCodeService, EquipMapper equipMapper, StimulateOrderMapper stimulateOrderMapper){
+    public CabinetService(CabinetMapper cabinetMapper, OrderMapper orderMapper, CupboardMapper cupboardMapper, QRCodeService qrCodeService, StimulateOrderMapper stimulateOrderMapper){
         this.cabinetMapper=cabinetMapper;
         this.orderMapper=orderMapper;
         this.cupboardMapper=cupboardMapper;
         this.qrCodeService=qrCodeService;
-        //this.equipMapper=equipMapper;
         this.stimulateOrderMapper=stimulateOrderMapper;
     }
 

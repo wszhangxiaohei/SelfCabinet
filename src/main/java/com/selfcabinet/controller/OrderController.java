@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping(path = "/order")
 @RestController
 @EnableAutoConfiguration
-@Api(tags = "Order", description = "订单相关操作")
+@Api(tags = "Order", description = "模拟订单相关操作（面向演示显示相关订单使用）")
 public class OrderController {
     private final OrderService orderService;
     private final StimulateOrderMapper stimulateOrderMapper;
@@ -47,16 +47,4 @@ public class OrderController {
         return orderService.getOneOrder(order_id);
     }
 
-
-//    @ApiModelProperty(value = "新订单来分配自提柜")
-//    @RequestMapping(path = "distribution",method = RequestMethod.POST)
-//    public Cabinet distribution(@RequestBody Order order)throws Exception{
-//        return orderService.distribution(order);
-//    }
-
-//    @ApiModelProperty(value = "取消订单")
-//    @RequestMapping(path = "cancelOrder",method = RequestMethod.PATCH)
-//    public String cancel(@RequestParam(value = "order_id")String order_id)throws Exception{
-//        return orderService.cancelOrder(order_id);
-//    }
 }

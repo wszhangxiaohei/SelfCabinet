@@ -39,7 +39,7 @@ public class QRCodeService {
         this.orderMapper=orderMapper;
     }
 
-    public void createQRCode(String order_id,String cupboard_id, String type,String carrier_code) throws Exception {
+    public void createQRCode(String order_id,String cupboard_id, String type,String carrier_code,String address) throws Exception {
         if(!(type.equals("user")||type.equals("courier"))){
             throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR, ResponseMessage.ERROR_QRCODE_TYPE);
         }
@@ -65,7 +65,7 @@ public class QRCodeService {
 
         try {
             BitMatrix bm= new MultiFormatWriter().encode(content,BarcodeFormat.QR_CODE,width,height);
-            Path file =new File("D:/QRCode.png").toPath();
+            Path file =new File(address+"/QRCode.png").toPath();
             MatrixToImageWriter.writeToPath(bm,format,file);
         }
         catch (WriterException e){
@@ -77,10 +77,10 @@ public class QRCodeService {
 
     }
 
-    public String readQRCode(){
+    public String readQRCode(String addresss){
         try {
             MultiFormatReader reader =new MultiFormatReader();
-            File file =new File("D:/QRCode.png");
+            File file =new File(addresss+"/QRCode.png");
             BufferedImage image = ImageIO.read(file);
             BinaryBitmap binaryBitmap=new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(image)));
             HashMap map =new HashMap();
@@ -91,16 +91,6 @@ public class QRCodeService {
             DecodedJWT jwt = CommonUtil.phraseJWT(resultString);
             return jwt.getSubject()+'+'+jwt.getToken();
 
-
-//            DecodedJWT jwt;
-//            jwt.decode(result,);
-//
-//            } catch (JWTVerificationException exception) {
-//                //无效签名或者无效token
-//                throw new SelfCabinetException(403, ResponseMessage.OUTDATE_QRCODE, ResponseMessage.OUTDATE_QRCODE);
-//            }
-//
-//            return jwt.getSubject().toString();
         } catch (NotFoundException e) {
             throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR, e.getMessage());
         } catch (IOException e) {
