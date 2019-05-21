@@ -52,8 +52,23 @@ public class OrderService {
 
     public String makeOrder() throws  Exception{
 
+        String  cupboard_id="";
+        //检查剩余数量
+        List<Cupboard> cupboards=cupboardMapper.getAll();
+        for (int i=0; i<cupboards.size();i++) {
+            if (cupboards.get(i).getSpare_num()!=0){
+                cupboard_id=cupboards.get(i).getCupboard_id();
+                cupboardMapper.updateSpareNumbyId(cupboards.get(i).getSpare_num()-1,cupboard_id);
+                break;
+            }
+        }
+        if (cupboard_id.equals("")){
+            throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(),ResponseMessage.ERROR,ResponseMessage.NO_SPARE_CABINET);
+        }
+
+
         StimulateOrder stimulateOrder=new StimulateOrder();
-        String  cupboard_id="10000";
+
         String type="user";
         String status="0";
 

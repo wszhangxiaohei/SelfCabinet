@@ -67,7 +67,7 @@ public class CabinetService {
            }
 
            //分配柜子
-           if (cupboardMapper.getSpareNumByCupboardId(cupboard_id)!=0){
+           //if (cupboardMapper.getSpareNumByCupboardId(cupboard_id)!=0){
                List<Cabinet> listCabinet = cabinetMapper.getByCupboardId(cupboard_id);
                for (int i=0; i<listCabinet.size();i++) {
                    if (listCabinet.get(i).getUsed().equals(Cabinet.SPARE) && listCabinet.get(i).getState().equals(Cabinet.NORMAL)) {
@@ -88,17 +88,17 @@ public class CabinetService {
                        log.info("[cabinet][open]管理员送货打开柜门"+order_id);
 
                        //更新模拟订单库
-                       //stimulateOrderMapper.updateStatusById("1",order_id);
+                       stimulateOrderMapper.updateStatusById("1",order_id);
 
                       return cabinet;
                    }
                }
 
 
-           }
-           else {
-               throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR, ResponseMessage.NO_SPARE_CABINET);
-           }
+//           }
+//           else {
+//               throw new SelfCabinetException(HttpStatus.FORBIDDEN.value(), ResponseMessage.ERROR, ResponseMessage.NO_SPARE_CABINET);
+//           }
        }
        else if (type.equals("user")){
            if (orderMapper.getIdNumById(order_id)==0){
@@ -143,7 +143,7 @@ public class CabinetService {
 
 
         int  num = orderMapper.getIdNumByCarrierCode(carrier_code);
-        log.info("[cabinet][openCabinetByCarrierCode]取货吗数量"+num);
+        log.info("[cabinet][openCabinetByCarrierCode]取货码数量"+num);
         if (orderMapper.getIdNumByCarrierCode(carrier_code)==0){
             throw new SelfCabinetException(HttpStatus.INTERNAL_SERVER_ERROR.value(),ResponseMessage.ERROR,ResponseMessage.NO_GOODS);
         }
@@ -232,7 +232,7 @@ public class CabinetService {
         if (type.equals("courier")){
 
             //1.更新cupboard库
-            cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(cupboard_id)-1,cupboard_id);
+            //cupboardMapper.updateSpareNumbyId(cupboardMapper.getSpareNumByCupboardId(cupboard_id)-1,cupboard_id);
             //2.更新cabinet表
             cabinetMapper.updateUsedById(Cabinet.USED,order.getCabinet_id());
 
