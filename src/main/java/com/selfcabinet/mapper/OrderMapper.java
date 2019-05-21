@@ -38,9 +38,11 @@ public interface OrderMapper {
     void updateCupBoardById(@Param("cupboard_id") String cupboard_id,@Param("order_id") String order_id);
 
     @Update("UPDATE order_info SET cabinet_id =#{cabinet_id} WHERE order_id=#{order_id}")
-    void updateCabinetById(@Param("cabinet_id") String cabinet_id,@Param("order_id") String order_id);
+    void updateCabinetIdById(@Param("cabinet_id") String cabinet_id,@Param("order_id") String order_id);
 
-    @Update("UPDATE order_info SET cabinet_used =#{cabinet_id} WHERE order_id=#{order_id}")
-    void updateCabinetUsedById(@Param("cabinet_used") String cabinet_used,@Param("order_id") String order_id);
+    @Update("UPDATE order_info SET bar_id =#{bar_id} WHERE order_id=#{order_id}")
+    void updateBarIdById(@Param("bar_id") String bar_id,@Param("order_id") String order_id);
 
+    @Select("SELECT * FROM order_info WHERE state ='0' ")
+    List<Order> getUndoneOrder();
 }
